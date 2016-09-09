@@ -31,7 +31,9 @@ var gameModel = {
     if(card1.value !== card2.value) {
       card1.show = false;
       card2.show = false;
+
     } else {
+
       this.cardsLeft -= 2;
       card1.matched = true;
       card2.matched = true;
@@ -51,7 +53,7 @@ var gameModel = {
     } else {
       gameModel.chosenCard = card;
     }
-    gameController.updateBoard();
+   // gameController.updateBoard();
   },
 
   shuffle: function() {
@@ -79,9 +81,6 @@ var gameModel = {
 // redraw on every click iwth new info
 
 var gameView = {
-  // init: function(numCards) {
-  //   this.render(gameModel.cards);
-  // },
 
   render: function(cards) {
     var $board = $('#board');
