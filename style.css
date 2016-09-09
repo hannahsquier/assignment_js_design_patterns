@@ -1,7 +1,25 @@
 .card {
-  border: 1px solid green;
+  border: 1px solid red;
   height: 100px;
   width: 100px;
   display: inline-block;
   margin: 5px;
+  background-color: red;
+  position: relative;
+  top: 0;
+  vertical-align: top;
+  line-height: 100px;
+  text-align: center;
+}
+
+.row {
+  vertical-align: top;
+}
+
+.flipped-card {
+  background-color: white;
+}
+
+.matched-card {
+  border-color: green;
 }

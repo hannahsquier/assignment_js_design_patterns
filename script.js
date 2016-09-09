@@ -3,6 +3,7 @@
 function Card(value) {
   this.value = value;
   this.show = false;
+  this.matched = false;
 }
 
 
@@ -26,19 +27,30 @@ var gameModel = {
     this.shuffle();
   },
 
-  checkForMatch: function($card1, $card2) {
-    card1 = cards[$card1.data('id')];
-    card2 = cards[$card2.data('id')];
-
+  checkForMatch: function(card1, card2) {
     if(card1.value !== card2.value) {
-      card1.show = false
-      card2.show = false
+      card1.show = false;
+      card2.show = false;
     } else {
-      this.cardsLeft -= 2
+      this.cardsLeft -= 2;
+      card1.matched = true;
+      card2.matched = true;
     }
-    this.chosenCard = null
-    this.turn++
+    this.chosenCard = null;
+    this.turn++;
+  },
 
+  chooseCard: function(id) {
+    var card = gameModel.cards[id];
+    card.show = true;
+    gameController.updateBoard();
+
+    if (gameModel.chosenCard) {
+      gameModel.checkForMatch(card, gameModel.chosenCard);
+
+    } else {
+      gameModel.chosenCard = card;
+    }
   },
 
   shuffle: function() {
@@ -56,7 +68,7 @@ var gameModel = {
     return this.cards;
   }
 
-}
+};
 
 // kits rules
 // 1. click handlers 1 line
@@ -69,50 +81,61 @@ var gameView = {
 
   render: function(cards) {
     var $board = $('#board');
-    $board.html("")
+    $board.html("");
+    var count = 0;
 
     for (var j = 0; j < Math.sqrt(cards.length); j++) {
-      var $row = $('<div class="row"></div>')
+      var $row = $('<div class="row"></div>');
 
       for (var i = 0; i < Math.sqrt(cards.length); i++) {
         var $card = $('<div class="card"></div>')
-                .attr('data-id', i);
+                .attr('data-id', count);
 
-        if(!cards[i].show) {
+        if(!cards[count].show) {
           $card.on("click", gameController.cardHandler);
 
         } else {
-          $card.text(cards[i].value)
+          $card.text(cards[count].value);
+          $card.addClass('flipped-card');
         }
 
+        if (cards[count].matched === true) {
+          $card.addClass('matched-card');
+        }
+
+        count++;
         $row.append($card);
       }
 
-      $board.append($row)
+      $board.append($row);
     }
 
 
+  },
+
+  updateScore: function() {
+    gameController.getTurns();
   }
-}
+};
 
 var gameController = {
   init: function (numCards) {
+    gameModel.init(numCards);
+    gameView.render(gameModel.cards);
+  },
 
-    gameView.init(numCards);
+  updateBoard: function() {
+    gameView.render(gameModel.cards);
   },
 
   cardHandler: function(event) {
-    if (gameModel.chosenCard) {
-      // is it a card that has already been turned over?
-      // is match?
+    gameModel.chooseCard($(event.target).data('id'));
+  },
 
-      setTimeout(gameModel.checkForMatch(event.target, gameModel.chosenCard), 2000)
-
-    } else {
-      // set chosenCard
-    }
+  getTurns: function() {
+    return gameModel.turns;
   }
-}
+};
 
 
 
@@ -120,7 +143,7 @@ $(document).ready(function() {
   $('button').on('click', function(e){
     var gridSize = prompt("What cho grid size?");
     gameController.init(gridSize * gridSize);
-  })
+  });
 });
 
 //
