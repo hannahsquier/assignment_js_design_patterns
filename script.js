@@ -26,11 +26,20 @@ var gameModel = {
     this.shuffle();
   },
 
-  isMatch: function() {
+  checkForMatch: function($card1, $card2) {
+    card1 = cards[$card1.data('id')];
+    card2 = cards[$card2.data('id')];
+
+    if(card1.value !== card2.value) {
+      card1.show = false
+      card2.show = false
+    } else {
+      this.cardsLeft -= 2
+    }
+    this.chosenCard = null
+    this.turn++
 
   },
-
-
 
   shuffle: function() {
     var currentIndex = this.cards.length, temporaryValue, randomIndex;
@@ -49,20 +58,40 @@ var gameModel = {
 
 }
 
+// kits rules
+// 1. click handlers 1 line
+// redraw on every click iwth new info
+
 var gameView = {
-  init: function(numCards) {
-    this.createCardHtml(numCards);
-    $('.card').on("click", gameController.cardHandler);
-  },
+  // init: function(numCards) {
+  //   this.render(gameModel.cards);
+  // },
 
-  createCardHtml: function(numCards) {
-    $board = $('#board');
+  render: function(cards) {
+    var $board = $('#board');
+    $board.html("")
 
-    for (var i = 0; i < numCards; i++) {
-      var $card = $('<div class="card"></div>')
-              .attr('data-id', i);
-      $board.append($card);
+    for (var j = 0; j < Math.sqrt(cards.length); j++) {
+      var $row = $('<div class="row"></div>')
+
+      for (var i = 0; i < Math.sqrt(cards.length); i++) {
+        var $card = $('<div class="card"></div>')
+                .attr('data-id', i);
+
+        if(!cards[i].show) {
+          $card.on("click", gameController.cardHandler);
+
+        } else {
+          $card.text(cards[i].value)
+        }
+
+        $row.append($card);
+      }
+
+      $board.append($row)
     }
+
+
   }
 }
 
@@ -71,35 +100,26 @@ var gameController = {
 
     gameView.init(numCards);
   },
+
   cardHandler: function(event) {
     if (gameModel.chosenCard) {
       // is it a card that has already been turned over?
       // is match?
+
+      setTimeout(gameModel.checkForMatch(event.target, gameModel.chosenCard), 2000)
+
     } else {
       // set chosenCard
     }
   }
 }
 
-// var confirmSelect = $('confirm text').dialog({
-//                       modal:true, //Not necessary but dims the page background
-//                       buttons:{
-//                         '2x2':function() {
-//                           return 4;
-//                         },
-//                         '3x3':function() {
-//                           return 9;
-//                         },
-//                         '4x4': function() {
-//                           return 16;
-//                         }
-//                       }
-//                     });
+
 
 $(document).ready(function() {
   $('button').on('click', function(e){
-    var numCards = prompt("What cho number");
-    gameController.init(numCards);
+    var gridSize = prompt("What cho grid size?");
+    gameController.init(gridSize * gridSize);
   })
 });
 
