@@ -23,3 +23,7 @@
 .matched-card {
   border-color: green;
 }
+
+#score {
+  margin: 5px;
+}

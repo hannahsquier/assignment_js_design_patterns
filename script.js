@@ -51,6 +51,7 @@ var gameModel = {
     } else {
       gameModel.chosenCard = card;
     }
+    gameController.updateBoard();
   },
 
   shuffle: function() {
@@ -66,8 +67,11 @@ var gameModel = {
       this.cards[randomIndex] = temporaryValue;
     }
     return this.cards;
-  }
+  },
 
+  gameOver: function() {
+    return gameModel.cardsLeft === 0
+  }
 };
 
 // kits rules
@@ -110,11 +114,19 @@ var gameView = {
       $board.append($row);
     }
 
-
+    gameView.updateScore();
+    if(gameController.gameOver()){
+      $gratsDiv = $("<div>You win</div>");
+      $('.board').after($gratsDiv);
+    }
   },
 
   updateScore: function() {
-    gameController.getTurns();
+    var turns = gameController.getTurns();
+    var $scoreDiv = $('#score');
+    turns = "Turn #: ".concat(turns);
+    $scoreDiv.text(turns);
+    $('button').after($scoreDiv);
   }
 };
 
@@ -133,7 +145,11 @@ var gameController = {
   },
 
   getTurns: function() {
-    return gameModel.turns;
+    return gameModel.turn;
+  },
+
+  gameOver: function() {
+    return gameModel.gameOver();
   }
 };
 
