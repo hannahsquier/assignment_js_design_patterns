@@ -3,15 +3,13 @@
 function Card(value) {
   this.value = value;
   this.show = false;
-  // this.id = id;
+  this.html = 
 }
 
 
 
 var gameModel = {
-  card1: null,
-
-  card2: null,
+  chosenCard: null,
 
   init: function(numCards) {
     this.turn = 0;
@@ -53,20 +51,39 @@ var gameModel = {
 }
 
 var gameView = {
-  init: function() {
+  init: function(numCards) {
+    this.createCardHtml(numCards);
+    $('.card').on("click", gameController.cardHandler);
+  },
 
+  createCardHtml: function(numCards) {
+    $board = $('#board');
 
-    $('.card').on("click", function () {
-
-    // some controller function
-
-    });
+    for (var i = 0; i < numCards; i++) {
+      var $card = $('<div class="card"></div>')
+              .attr('data-id', i);
+      $board.append($card);
+    }
   }
 }
 
 var gameController = {
+  init: function () {
 
+  },
+  cardHandler: function(event) {
+    if (gameModel.chosenCard) {
+      // is it a card that has already been turned over?
+      // is match?
+    } else {
+      // set chosenCard
+    }
+  }
 }
+
+$(document).ready(function {
+  gameController.init();
+});
 
 //
 
