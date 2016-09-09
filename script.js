@@ -1,17 +1,4 @@
-function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-  return array;
-}
+
 
 function Card(value) {
   this.value = value;
@@ -22,10 +9,14 @@ function Card(value) {
 
 
 var gameModel = {
+  card1: null,
+
+  card2: null,
 
   init: function(numCards) {
     this.turn = 0;
     this.cards = [];
+    this.cardsLeft = numCards;
     this.buildDeck(numCards);
   },
 // only a single pair for each value
@@ -34,15 +25,43 @@ var gameModel = {
       this.cards.push(new Card(i));
       this.cards.push(new Card(i));
     }
-    shuffle(this.cards);
+
+    this.shuffle();
+  },
+
+  isMatch: function() {
+
+  },
+
+
+
+  shuffle: function() {
+    var currentIndex = this.cards.length, temporaryValue, randomIndex;
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      // And swap it with the current element.
+      temporaryValue = this.cards[currentIndex];
+      this.cards[currentIndex] = this.cards[randomIndex];
+      this.cards[randomIndex] = temporaryValue;
+    }
+    return this.cards;
   }
-
-
 
 }
 
 var gameView = {
+  init: function() {
 
+
+    $('.card').on("click", function () {
+
+    // some controller function
+
+    });
+  }
 }
 
 var gameController = {
