@@ -3,7 +3,6 @@
 function Card(value) {
   this.value = value;
   this.show = false;
-  this.html = 
 }
 
 
@@ -68,8 +67,9 @@ var gameView = {
 }
 
 var gameController = {
-  init: function () {
+  init: function (numCards) {
 
+    gameView.init(numCards);
   },
   cardHandler: function(event) {
     if (gameModel.chosenCard) {
@@ -81,8 +81,26 @@ var gameController = {
   }
 }
 
-$(document).ready(function {
-  gameController.init();
+// var confirmSelect = $('confirm text').dialog({
+//                       modal:true, //Not necessary but dims the page background
+//                       buttons:{
+//                         '2x2':function() {
+//                           return 4;
+//                         },
+//                         '3x3':function() {
+//                           return 9;
+//                         },
+//                         '4x4': function() {
+//                           return 16;
+//                         }
+//                       }
+//                     });
+
+$(document).ready(function() {
+  $('button').on('click', function(e){
+    var numCards = prompt("What cho number");
+    gameController.init(numCards);
+  })
 });
 
 //
